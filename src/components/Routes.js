@@ -1,8 +1,7 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import { Route, BrowserRouter as Router } from 'react-router-dom'
 import PageEventEdit from './PageEventEdit'
 import PageEvent from './PageEvent'
-import Calendar_ from './calendar'
 
 
 const Routes = () => (

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import { Redirect } from 'react-router-dom'
 import { Calendar, momentLocalizer} from 'react-big-calendar'
 import moment from 'moment'
 import Service from '../service'
@@ -63,7 +62,7 @@ const EventCalendar = (props) => {
     
     <div>
       {
-        (open == 0 && auth) &&
+        (open === 0 && auth) &&
         <div className='c-bigcalendar-container'>
           <Calendar
             selectable
@@ -79,11 +78,11 @@ const EventCalendar = (props) => {
         </div>
       }
       {
-        (open == 1 && auth) &&
+        (open === 1 && auth) &&
         <PageEvent store={store}/>
       }
        {
-        (open == 2 && auth) &&
+        (open === 2 && auth) &&
         <PageEventEdit selectedEventID = {selectedEventID}  store = {store}/>
       }
       {

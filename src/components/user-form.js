@@ -143,7 +143,7 @@ export default class UserForm extends Component {
         const {store} = this.props;
          const {reqId,code,user} = this.state;
          store.checkCode(reqId,code).then((res) => {
-             if(res.status == 0 ){
+             if(res.status === 0 ){
                 store.register(user).then((_)=> {
                     this.setState({
                         message: {
@@ -171,7 +171,7 @@ export default class UserForm extends Component {
 
     render() {
 
-        const {user, message, isLogin,isVerified,phone,code} = this.state;
+        const {user, message, isLogin,isVerified,code} = this.state;
 
         return (
 
