@@ -14,16 +14,26 @@ export default class UserForm extends Component {
             message: null,
             isLogin: true,
             user: {
+                role:'student',
                 name: '',
                 email: '',
-                password: ''
-            }
+                password: '',
+                
+            },
+            phone: '',
+            reqId: '',
+            code: ''
+            
         }
 
         this.onSubmit = this.onSubmit.bind(this);
-        this.onTextFieldChange = this.onTextFieldChange.bind(this)
-
+        
+        this.onSelectionChange = this.onSelectionChange.bind(this);
+        this.onTextFieldChange = this.onTextFieldChange.bind(this);
         this.onClickOutside = this.onClickOutside.bind(this);
+        this.onCodeFieldChange = this.onCodeFieldChange.bind(this);
+        this.onPhoneFieldChange = this.onPhoneFieldChange.bind(this);
+        this.onCheckCode = this.onCheckCode.bind(this);
         
     }
 
@@ -52,7 +62,7 @@ export default class UserForm extends Component {
     }
 
     onSubmit(event) {
-        const {user, isLogin} = this.state;
+        const {user, isLogin,phone} = this.state;
         const {store} = this.props;
         event.preventDefault();
         this.setState({
@@ -107,7 +117,55 @@ export default class UserForm extends Component {
 
 
     }
-    
+    onPhoneFieldChange(event) {
+        console.log(event.target.value);
+       this.setState({
+           phone: event.target.value
+       });
+
+    }
+
+    onSelectionChange(event) {
+        this.setState({value: event.target.value});
+
+    }
+
+    onCodeFieldChange(event) {
+        console.log(event.target.value);
+        this.setState({
+            code: event.target.value
+        });
+ 
+    }
+
+
+     onCheckCode() {
+        const {store} = this.props;
+         const {reqId,code,user} = this.state;
+         store.checkCode(reqId,code).then((res) => {
+             if(res.status == 0 ){
+                store.register(user).then((_)=> {
+                    this.setState({
+                        message: {
+                            body: 'User created.',
+                            type: 'success'
+                        }
+                    }, () => {
+                        // now login this user
+                        store.login(user.email, user.password).then(() => {
+                            if (this.props.onClose) {
+                                this.props.onClose();
+                            }
+                        })
+                    })
+                   
+                
+                })
+             } else{
+                 console.log("code invalid. please try again");
+             }
+         })
+     }
 
     render() {
 
@@ -116,12 +174,19 @@ export default class UserForm extends Component {
         return (
 
             <div className="user-form" ref={(ref) => this.ref = ref}>
-             <div>
+                <div>
                 <form onSubmit={this.onSubmit} method="post">
                     {message ?
                         <p className={classNames('app-message', _.get(message, 'type'))}>{_.get(message, 'body')}</p> : null}
 
                     {!isLogin ?  <div>
+                        <div className="form-item">
+                        <label>Role:</label>
+                        <select  value={this.state.value} onChange={this.onTextFieldChange} type={'text'} name={"role"} >
+                            <option value="student">Student</option>
+                            <option value="mentor">Mentor</option>
+                        </select>
+                    </div>
                     <div className="form-item">
                         <label>Name</label>
                         <input placeholder={'Full name'} onChange={this.onTextFieldChange} type={'text'} value={_.get(user, 'name', '')} name={"name"} />
@@ -154,9 +219,8 @@ export default class UserForm extends Component {
                     </div>
                 </form>
                 </div> 
-                       
-                </div>
-              
+                
+            </div>
 
         );
     }
