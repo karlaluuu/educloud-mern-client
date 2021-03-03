@@ -213,22 +213,6 @@ export default class Realtime {
 
     }
 
-    authentication() {
-        const store = this.store;
-
-        const tokenId = store.getUserTokenId();
-
-        if (tokenId) {
-
-            const message = {
-                action: 'auth',
-                payload: `${tokenId}`
-            }
-
-            this.send(message);
-        }
-
-    }
 
 
     connect() {
@@ -247,8 +231,6 @@ export default class Realtime {
             // let tell to the server who are you ?
 
             this.isConnected = true;
-
-            this.authentication();
 
 
             ws.onmessage = (event) => {
